@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+{% block content %}
+<table border="1">
+    <tr>
+        <td>
+            <a class="btn btn-info left rounded-0" style="float: left;" href="{% url 'cal' %}?{{ prev_month }}"> Previous Month </a>
+        </td>
+        <td>
+            <a class="btn btn-info right rounded-0" style = "float: right" href="{% url 'cal' %}?{{ next_month }}"> Next Month </a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            {{ calendar }}
+        </td>
+    </tr>
+</table>
+<!--<div class="clearfix">-->
+<!--</div>-->
+
+<!--{{ cal|safe }}-->
+{% endblock %}

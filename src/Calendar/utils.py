@@ -1,0 +1,40 @@
+from calendar import HTMLCalendar
+
+from .models import Event
+
+
+class Calendar(HTMLCalendar):
+    def __init__(self, year=None, month=None):
+        self.year = year
+        self.month = month
+        super(Calendar, self).__init__()
+
+    def formatmonth(self):
+        events = Event.objects.filter(date__year=self.year, date__month=self.month)
+        cal = f'<table border="1" cellpadding="1" cellspacing="0" class="calendar" style = "width: 100%; margin-left: auto; margin-right: auto; table-layout: fixed; padding-top: 20%;">\n'
+
+        # Calendar header display type
+        cal += f'{self.formatmonthname(self.year, self.month, withyear=True)}\n'
+        # Week name display type
+        cal += f'{self.formatweekheader()}\n'
+
+        for week in self.monthdays2calendar(self.year, self.month):
+            cal += f'{self.formatweek(week, events)}\n'
+        return cal
+
+    def formatweek(self, inp_week, events):
+        week = ''
+        for cal_d, week_day in inp_week:
+            week += self.formatday(cal_d, events)
+        return f'<tr> {week} </tr>'
+
+    def formatday(self, cal_d, events):
+        day_events = events.filter(date__day=cal_d)
+        events_to_cal = ''
+        for event in day_events:
+            events_to_cal += f'<li> {event.name} </li>'
+
+        if cal_d != 0:
+            return f"<td style ='text-align: center; vertical-align: middle;><span class='date'>{cal_d}</span><ul> {events_to_cal} </ul></td>"
+
+        return '<td></td>'
