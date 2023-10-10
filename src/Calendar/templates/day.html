@@ -1,0 +1,45 @@
+{% extends "main.html" %}
+{% block content %}
+Selected day: {{ day }} {{ month_name }} {{ year }}
+<table border="1">
+    {% if events %}
+    <tr>
+        <td>
+            Events for the day
+        </td>
+        <td>
+            Description
+        </td>
+        <td>
+            Event date
+        </td>
+        <td>
+            Event reminder time
+        </td>
+    </tr>
+    {% for event in events %}
+    <tr>
+        <td>
+            {{ event.name }}
+        </td>
+        <td>
+            {{ event.description }}
+        </td>
+        <td>
+            {{ event.date }}
+        </td>
+        <td>
+            {{ event.date_remind }}
+        </td>
+    </tr>
+    {%endfor%}
+    {% else %}
+    <p>
+        You have no events for this day, would you like to add one?
+    </p>
+    {% endif %}
+</table>
+<div class="clearfix">
+  <a class="btn btn-info left rounded-0" href="{% url 'cal' %}"> Return </a>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django
+    volumes:
+      - ./src:/src
+    ports:
+      - 8000:8000
+    command: bash -c 'python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000'
+
+  #    command: bash -c "gunicorn -w 9 src.wsgi:application -b 0.0.0.0:8000"
+
+  redis:
+    image: redis:latest
+    container_name: redis_db
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_worker
+    volumes:
+      - ./src:/src
+    ports:
+      - 5555:5555
+    command: bash -c "celery -A src worker -c 5 -l info"
+
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:management
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - "5672:5672"
+      - "15672:15672"
